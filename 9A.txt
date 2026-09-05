@@ -1,0 +1,78 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+// Mock model class to resolve the error
+class NetworkPostItemModel {
+  final String recordId;
+  final String textTitle;
+  NetworkPostItemModel(this.recordId, this.textTitle);
+}
+
+// Fetch data asynchronously from a remote web server
+Future<List<NetworkPostItemModel>> fetchRemoteData() async {
+  final String url = 'https://jsonplaceholder.typicode.com/users?_limit=3';
+  final http.Response response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = jsonDecode(response.body);
+    return jsonData.map((item) => NetworkPostItemModel(
+      item['id'].toString(), 
+      item['name']
+    )).toList();
+  } else {
+    throw Exception(
+      'Failed to connect to the server. '
+      'Status Code: ${response.statusCode}',
+    );
+  }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: Scaffold(
+      appBar: AppBar(title: const Text("Remote Data")),
+      body: FutureBuilder<List<NetworkPostItemModel>>(
+        future: fetchRemoteData(),
+        builder: (context, snapshot) => DataWidget(dataSnapshot: snapshot),
+      ),
+    ),
+  ));
+}
+
+class DataWidget extends StatelessWidget {
+  final AsyncSnapshot<List<NetworkPostItemModel>> dataSnapshot;
+
+  const DataWidget({super.key, required this.dataSnapshot});
+
+  @override
+  Widget build(BuildContext context) {
+    if (dataSnapshot.connectionState == ConnectionState.waiting) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (dataSnapshot.hasError) {
+      return Center(
+          child: Text('Network Error Encountered: ${dataSnapshot.error}'));
+    } 
+    
+    // Explicitly check if data is null before using the null check operator (!)
+    final List<NetworkPostItemModel>? data = dataSnapshot.data;
+    if (data == null || data.isEmpty) {
+      return const Center(
+          child: Text('Data Ingestion Engine reports empty records.'));
+    }
+
+    // Success Path
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: ListTile(
+            leading: CircleAvatar(
+                child: Text(data[index].recordId)),
+            title: Text(data[index].textTitle),
+          ),
+        );
+      },
+    );
+  }
+}

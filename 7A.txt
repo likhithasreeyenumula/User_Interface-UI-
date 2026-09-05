@@ -1,0 +1,56 @@
+import 'package:flutter/material.dart';
+void main() {
+ runApp(const MaterialApp(
+ home: Scaffold(
+ body: SecureDataCaptureForm(),
+ ),
+ ));
+}
+class SecureDataCaptureForm extends StatefulWidget {
+ const SecureDataCaptureForm({Key? key}) : super(key: key);
+ @override
+ State<SecureDataCaptureForm> createState() => _SecureDataCaptureFormState();
+}
+class _SecureDataCaptureFormState extends State<SecureDataCaptureForm> {
+ // Local state field management interaction mapping controllers
+ final TextEditingController _userNameInputController = TextEditingController();
+ final TextEditingController _userEmailInputController = TextEditingController();
+ @override
+ void dispose() {
+ // Tearing down data controllers cleanly to protect system memory allocations
+ _userNameInputController.dispose();
+ _userEmailInputController.dispose();
+ super.dispose();
+ }
+ @override
+ Widget build(BuildContext context) {
+ return Scaffold(
+ body: Padding(
+ padding: const EdgeInsets.all(20.0),
+ child: Form(
+ child: Column(
+ children: [
+ TextFormField(
+ controller: _userNameInputController,
+ decoration: const InputDecoration(
+ labelText: 'Profile Identity Name',
+ border: OutlineInputBorder(),
+ prefixIcon: Icon(Icons.person),
+ ),
+ ),
+ const SizedBox(height: 15),
+ TextFormField(
+ controller: _userEmailInputController,
+ decoration: const InputDecoration(
+ labelText: 'Network Comm Email Endpoint',
+ border: OutlineInputBorder(),
+ prefixIcon: Icon(Icons.email),
+ ),
+ ),
+ ],
+ ),
+ ),
+ ),
+ );
+ }
+}

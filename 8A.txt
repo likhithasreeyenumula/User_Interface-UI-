@@ -1,0 +1,67 @@
+import 'package:flutter/material.dart';
+
+void main() {
+ runApp(const MaterialApp(home: ExplicitMotionWorkspace()));
+}
+
+class ExplicitMotionWorkspace extends StatefulWidget {
+ const ExplicitMotionWorkspace({Key? key}) : super(key: key);
+ @override
+ State<ExplicitMotionWorkspace> createState() => _ExplicitMotionWorkspaceState();
+}
+
+class _ExplicitMotionWorkspaceState extends State<ExplicitMotionWorkspace>
+ with SingleTickerProviderStateMixin {
+
+ late AnimationController _centralMotionController;
+ late Animation<double> _boxSizeInterpolation;
+
+ @override
+ void initState() {
+ super.initState();
+ // 1. Initializing the core explicit animation engine controller module
+ _centralMotionController = AnimationController(
+ vsync: this,
+ duration: const Duration(milliseconds: 800),
+ );
+ // 2. Initializing linear value range constraints
+ _boxSizeInterpolation = Tween<double>(begin: 100.0, end: 220.0).animate(_centralMotionController);
+ }
+
+ @override
+ void dispose() {
+ // Tearing down animation controller resources
+ _centralMotionController.dispose(); 
+ super.dispose();
+ }
+
+ @override
+ Widget build(BuildContext context) {
+ return Scaffold(
+ appBar: AppBar(title: const Text('Explicit Animation Engine')),
+ body: Center(
+ child: AnimatedBuilder(
+ animation: _boxSizeInterpolation,
+ builder: (context, child) {
+ return Container(
+ width: _boxSizeInterpolation.value,
+ height: _boxSizeInterpolation.value,
+ color: Colors.red,
+ child: const Icon(Icons.bolt, color: Colors.white, size: 40),
+ );
+ },
+ ),
+ ),
+ floatingActionButton: FloatingActionButton(
+ onPressed: () {
+ if (_centralMotionController.status == AnimationStatus.completed) {
+ _centralMotionController.reverse();
+ } else {
+ _centralMotionController.forward();
+ }
+ },
+ child: const Icon(Icons.play_arrow),
+ ),
+ );
+ }
+}

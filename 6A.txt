@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+class CustomTelemetryButton extends StatelessWidget {
+ final String buttonTextLabel;
+ final IconData visualIconAsset;
+ final Color backgroundTint;
+ final VoidCallback ontapInteractionAction;
+ // Constructor enforcing explicit configuration requirements on instantiation
+ const CustomTelemetryButton({
+ Key? key,
+ required this.buttonTextLabel,
+ required this.visualIconAsset,
+ required this.backgroundTint,
+ required this.ontapInteractionAction,
+ }) : super(key: key);
+ @override
+ Widget build(BuildContext context) {
+ return ElevatedButton.icon(
+ style: ElevatedButton.styleFrom(
+ backgroundColor: backgroundTint,
+ padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+ shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+ ),
+ icon: Icon(visualIconAsset, color: Colors.white),
+ label: Text(buttonTextLabel, style: const TextStyle(color: Colors.white, 
+fontWeight: FontWeight.bold)),
+ onPressed: ontapInteractionAction,
+ );
+ }
+}
+void main() {
+ runApp(MaterialApp(
+ home: Scaffold(
+ body: Center(
+ child: CustomTelemetryButton(
+ buttonTextLabel: "Telemetry",
+ visualIconAsset: Icons.data_usage,
+ backgroundTint: Colors.blue,
+ ontapInteractionAction: () {
+ print("Telemetry button pressed");
+ },
+ ),
+ ),
+ ),
+ ));
+}

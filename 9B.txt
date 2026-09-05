@@ -1,0 +1,74 @@
+import 'package:flutter/material.dart'; 
+// Definition of the model replacing the missing package import 
+class NetworkPostItemModel { 
+final int recordId; 
+final String textTitle; 
+NetworkPostItemModel({required this.recordId, required this.textTitle}); 
+} 
+// Definition of the fetch method replacing the missing package import 
+Future<List<NetworkPostItemModel>> executeRemoteDataIngestionFetch() async { 
+// Simulating network delay 
+await Future.delayed(const Duration(seconds: 2)); 
+return [ 
+NetworkPostItemModel(recordId: 1, textTitle: "Live Telemetry Report A"), 
+NetworkPostItemModel(recordId: 2, textTitle: "Live Telemetry Report B"), 
+];
+} 
+void main() => runApp(const DataDisplayApp()); 
+class DataDisplayApp extends StatelessWidget { 
+const DataDisplayApp({Key? key}) : super(key: key); 
+@override 
+Widget build(BuildContext context) { 
+return const MaterialApp(home: LiveDataDashboardScreen()); 
+} 
+} 
+class LiveDataDashboardScreen extends StatefulWidget { 
+const LiveDataDashboardScreen({Key? key}) : super(key: key); 
+@override 
+State<LiveDataDashboardScreen> createState() => 
+_LiveDataDashboardScreenState(); 
+} 
+class _LiveDataDashboardScreenState extends State<LiveDataDashboardScreen> { 
+late Future<List<NetworkPostItemModel>> _networkTaskCacheHandle; 
+@override 
+void initState() { 
+super.initState(); 
+// Cache the asynchronous data task during initial widget lifecycle state frame load 
+_networkTaskCacheHandle = executeRemoteDataIngestionFetch(); 
+} 
+@override 
+Widget build(BuildContext context) { 
+return Scaffold( 
+appBar: AppBar(title: const Text('Live REST Telemetry Monitor'), 
+backgroundColor: Colors.teal), 
+body: FutureBuilder<List<NetworkPostItemModel>>( 
+future: _networkTaskCacheHandle, 
+builder: (BuildContext context, AsyncSnapshot<List<NetworkPostItemModel>> 
+dataSnapshot) { 
+// Conditional routing branches mapping directly to background process states 
+if (dataSnapshot.connectionState == ConnectionState.waiting) { 
+return const Center(child: CircularProgressIndicator()); 
+} else if (dataSnapshot.hasError) { 
+return Center(child: Text('Network Error Encountered: ${dataSnapshot.error}')); 
+} else if (!dataSnapshot.hasData || dataSnapshot.data!.isEmpty) { 
+return const Center(child: Text('Data Ingestion Engine reports empty records.')); 
+} 
+// Success Path: Build the dynamic data list view layout frame structure cleanly 
+final List<NetworkPostItemModel> onlineRecords = dataSnapshot.data!; 
+return ListView.builder( 
+itemCount: onlineRecords.length, 
+itemBuilder: (context, index) { 
+return Card( 
+margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), 
+child: ListTile( 
+leading: CircleAvatar(child: Text('${onlineRecords[index].recordId}')), 
+title: Text(onlineRecords[index].textTitle), 
+), 
+); 
+}, 
+); 
+}, 
+), 
+); 
+} 
+}

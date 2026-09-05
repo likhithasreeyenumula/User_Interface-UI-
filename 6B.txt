@@ -1,0 +1,51 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(const UnifiedBrandingApp());
+
+class UnifiedBrandingApp extends StatelessWidget {
+  const UnifiedBrandingApp({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      // Global Central Theme Schema Declaration Configuration
+      theme: ThemeData(
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: const Color(0xFFF7FAFC),
+        primaryColor: const Color(0xFF2B6CB0),
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF2D3748)),
+          bodyLarge: TextStyle(fontSize: 14, color: Color(0xFF4A5568)),
+        ),
+      ),
+      home: const BrandedThemeShowcaseView(),
+    );
+  }
+}
+
+class BrandedThemeShowcaseView extends StatelessWidget {
+  const BrandedThemeShowcaseView({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    // Inheriting configuration rules explicitly from the central active application context theme
+    final TextStyle centralHeadlineStyle = Theme.of(context).textTheme.displayLarge!;
+    final TextStyle centralBodyStyle = Theme.of(context).textTheme.bodyLarge!;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Design System Matrix')),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Design Architecture Node Showcase', style: centralHeadlineStyle),
+            const SizedBox(height: 8),
+            Text(
+              'This text automatically inherits unified typography properties from the global application configuration rules.',
+              style: centralBodyStyle,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
