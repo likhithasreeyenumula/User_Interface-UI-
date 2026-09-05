@@ -1,0 +1,107 @@
+// main function: Program execution starts here 
+void main() { 
+  // 1. Comments 
+  // This is a single-line comment. 
+  /* This is a multi-line comment. */ 
+ 
+  // 2. Printing Output 
+  print('Hello, Dart!'); 
+  print('Welcome to the basics.'); 
+ 
+  // 3. Variables and Data Types 
+  // int: whole numbers 
+  int score = 100; 
+  int year = 2025; 
+  print('Score: $score, Year: $year'); 
+ 
+  // double: decimal numbers 
+  double pi = 3.14; 
+  double temperature = 28.5; 
+  print('Pi: $pi, Temp: $temperature'); 
+ 
+  // String: text 
+  String name = 'Alice'; 
+  String greeting = "Hi there!"; 
+  print('Name: $name, Greeting: $greeting'); 
+ 
+  // bool: true/false 
+  bool isActive = true; 
+  bool isFinished = false; 
+  print('Active: $isActive, Finished: $isFinished'); 
+ 
+  // var: type inferred by initial value 
+  var city = 'Vijayawada'; // Inferred as String 
+  var count = 50;          // Inferred as int 
+  print('City: $city, Count: $count'); 
+ 
+  // dynamic: can change type 
+  dynamic value = 'Dart'; 
+  print('Dynamic value 1: $value'); 
+  value = 123; // Now an int 
+  print('Dynamic value 2: $value'); 
+ 
+  // 4. Basic Operators 
+  int a = 15; 
+  int b = 4; 
+ 
+  print('Addition: ${a + b}');       // 19 
+  print('Division: ${a / b}');       // 3.75 (double result) 
+  print('Modulo: ${a % b}');        // 3 (remainder) 
+  print('Is a > b? ${a > b}');       // true 
+ 
+  // 5. Control Flow: If-Else 
+  int hour = 21; // It's currently 9:29:43 PM IST, so using 21 (24 hour format) 
+  if (hour < 12) { 
+    print('Good morning!'); 
+  } else if (hour < 18) { 
+    print('Good afternoon!'); 
+  } else { 
+    print('Good evening!'); // This will be printed 
+  } 
+ 
+  // 6. Control Flow: Loops 
+  // For Loop 
+  print('\nFor loop counts:'); 
+  for (int i = 0; i < 3; i++) { 
+    print(i); // Prints 0, 1, 2 
+  } 
+ 
+  // While Loop 
+  print('While loop counts:'); 
+  int j = 0; 
+  while (j < 2) { 
+    print(j); // Prints 0, 1 
+    j++; 
+  } 
+ 
+  // 7. Functions 
+  // Calling a function with no return value 
+  greetUser('John'); 
+ 
+  // Calling a function that returns a value 
+  int product = multiply(6, 7); 
+  print('Product of 6 and 7: $product'); 
+ 
+  // 8. Collections: List (similar to arrays) 
+  List<String> colors = ['Red', 'Green', 'Blue']; 
+  print('\nColors: $colors'); 
+  print('First color: ${colors[0]}'); 
+ 
+  // 9. Collections: Map (key-value pairs) 
+  Map<String, int> ages = { 
+    'Bob': 40, 
+    'Charlie': 25 
+  }; 
+  print('Bob\'s age: ${ages['Bob']}'); 
+  print('Map of ages: $ages'); 
+} 
+ 
+// Function with a void return type (does not return a value) 
+void greetUser(String userName) { 
+  print('Hello, $userName!'); 
+} 
+ 
+// Function with an int return type (returns an integer) 
+int multiply(int num1, int num2) { 
+  return num1 * num2; 
+}

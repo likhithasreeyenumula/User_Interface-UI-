@@ -1,0 +1,40 @@
+import 'package:flutter/material.dart'; 
+void main() { 
+runApp(const MaterialApp(home: BreakpointMediaQueryView())); 
+} 
+class BreakpointMediaQueryView extends StatelessWidget { 
+const BreakpointMediaQueryView({Key? key}) : super(key: key); 
+@override 
+Widget build(BuildContext context) { 
+// Sampling dynamic global context window constraints 
+final Size screenMetrics = MediaQuery.of(context).size; 
+final Orientation activeOrientation = MediaQuery.of(context).orientation; 
+final bool isWideScreenDevice = screenMetrics.width > 600; 
+final double computedAdaptiveFontSize = isWideScreenDevice ? 24.0 : 16.0; 
+final double containerBoxProportion = activeOrientation == Orientation.portrait ? 0.3 : 
+0.6; 
+return Scaffold( 
+body: Center( 
+child: Container( 
+width: screenMetrics.width * 0.85, 
+height: screenMetrics.height * containerBoxProportion, 
+padding: const EdgeInsets.all(20), 
+color: Colors.deepOrange[100], 
+child: Column( 
+mainAxisAlignment: MainAxisAlignment.center, 
+children: [ 
+Text( 
+'Adaptive System Console Profile', 
+style: TextStyle(fontSize: computedAdaptiveFontSize, fontWeight: 
+FontWeight.bold), 
+), 
+const SizedBox(height: 12), 
+Text('Absolute Device Width Matrix: ${screenMetrics.width.toStringAsFixed(1)}px'), 
+Text('Current Hardware Orientation: ${activeOrientation.toString().split('.').last}'), 
+], 
+), 
+), 
+), 
+); 
+} 
+}

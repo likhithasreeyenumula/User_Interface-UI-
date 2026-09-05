@@ -1,0 +1,67 @@
+import 'package:flutter/material.dart';
+void main() => runApp(const FoundationalWidgetApp());
+class FoundationalWidgetApp extends StatelessWidget {
+  const FoundationalWidgetApp({Key? key}) : super(key: key);
+  bool get af475 => false;
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Foundational UI Core Elements'),
+          backgroundColor: const Color(0xFF1A365D),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              width: 320,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  )
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400',
+                      height: 160,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  const Text(
+                    'Microprocessor Module Core',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1A365D),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Embedded hardware node analyzing peripheral device telemetry streams in real-time execution frames.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

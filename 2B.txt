@@ -1,0 +1,117 @@
+import 'package:flutter/material.dart'; 
+import 'package:provider/provider.dart'; 
+void main() { 
+runApp( 
+ChangeNotifierProvider<NodeManager>( 
+create: (context) => NodeManager(), 
+builder: (context, child) => const MaterialApp( 
+debugShowCheckedModeBanner: false, 
+home: MultiAxisLayoutView(), 
+), 
+), 
+); 
+} 
+class NodeManager extends ChangeNotifier { 
+String _status = 'Active'; 
+bool _isRebooting = false; 
+String get status => _status; 
+bool get isRebooting => _isRebooting; 
+void toggleStatus() { 
+_isRebooting = true; 
+notifyListeners(); 
+Future<void>.delayed(const Duration(seconds: 2), () { 
+_status = _status == 'Active' ? 'Idle' : 'Active'; 
+_isRebooting = false; 
+notifyListeners(); 
+}); 
+} 
+} 
+class MultiAxisLayoutView extends StatelessWidget { 
+const MultiAxisLayoutView({super.key}); 
+@override 
+Widget build(BuildContext context) { 
+return Scaffold( 
+appBar: AppBar(title: const Text('System Dashboard')), 
+body: SingleChildScrollView( 
+padding: const EdgeInsets.all(16.0), 
+child: Column( 
+children: [ 
+const NodeHeader(), 
+const SizedBox(height: 25), 
+const InfrastructureLayer(), 
+], 
+), 
+), 
+); 
+} 
+} 
+class NodeHeader extends StatelessWidget { 
+const NodeHeader({super.key}); 
+@override 
+Widget build(BuildContext context) { 
+final manager = Provider.of<NodeManager>(context); 
+return Row( 
+children: [ 
+const CircleAvatar( 
+backgroundColor: Colors.blue, 
+child: Icon(Icons.person, color: Colors.white), 
+), 
+const SizedBox(width: 12), 
+Expanded( 
+child: Column( 
+crossAxisAlignment: CrossAxisAlignment.start, 
+children: [ 
+const Text('System Admin Node', style: TextStyle(fontWeight: 
+FontWeight.bold)), 
+Text( 
+'Status: ${manager.status} Operation Cluster', 
+style: const TextStyle(fontSize: 12, color: Colors.green), 
+), 
+], 
+), 
+), 
+IconButton(icon: const Icon(Icons.settings), onPressed: () {}), 
+], 
+); 
+} 
+} 
+class InfrastructureLayer extends StatelessWidget { 
+const InfrastructureLayer({super.key}); 
+@override 
+Widget build(BuildContext context) { 
+final manager = Provider.of<NodeManager>(context); 
+return SizedBox( 
+height: 180, 
+width: double.infinity, 
+child: Stack( 
+children: [ 
+Container( 
+decoration: BoxDecoration( 
+color: Colors.indigo, 
+borderRadius: BorderRadius.circular(12), 
+), 
+), 
+const Positioned( 
+top: 20, 
+left: 20, 
+child: Text( 
+'Primary Infrastructure Layer', 
+style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: 
+FontWeight.bold), 
+), 
+), 
+Positioned( 
+bottom: 15, 
+right: 15, 
+child: ElevatedButton( 
+onPressed: manager.isRebooting ? null : () => manager.toggleStatus(), 
+child: manager.isRebooting 
+? const SizedBox(width: 20, height: 20, child: 
+CircularProgressIndicator(strokeWidth: 2)) 
+: const Text('Reboot Node'), 
+), 
+) 
+], 
+), 
+); 
+}

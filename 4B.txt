@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+void main() {
+  final app = MaterialApp(
+    title: 'Flutter Navigation Demo',
+    theme: ThemeData(primarySwatch: Colors.teal),
+    initialRoute: '/',
+    routes: {
+      '/': (context) => Scaffold(
+            appBar: AppBar(title: Text('🏠 Home')),
+            body: Center(
+              child: ElevatedButton(
+                onPressed: () => Navigator.pushNamed(context, '/second',
+                    arguments: 'Hello from HomeScreen!'),
+                child: Text('Go to Second Screen'),
+              ),
+            ),
+          ),
+      '/second': (context) {
+        final args = ModalRoute.of(context)?.settings.arguments as String?;
+        return Scaffold(
+          appBar: AppBar(title: Text('🏠 Second')),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (args != null) Text(args, style: TextStyle(fontSize: 18)),
+                ElevatedButton(
+                  onPressed: () => Navigator.pushNamed(context, '/third',
+                      arguments: 'Message from Second → Third!'),
+                  child: Text('Go to Third Screen'),
+                ),
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('Back')),
+              ],
+            ),
+          ),
+        );
+      },
+      '/third': (context) {
+        final args = ModalRoute.of(context)?.settings.arguments as String?;
+        return Scaffold(
+          appBar: AppBar(title: Text('🏠 Third')),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (args != null)
+                  Text(args, style: TextStyle(fontWeight: FontWeight.bold)),
+                ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('Back to Second')),
+                ElevatedButton(
+                    onPressed: () =>
+                        Navigator.popUntil(context, ModalRoute.withName('/')),
+                    child: Text('Back to Home')),
+              ],
+            ),
+          ),
+        );
+      },
+    },
+  );
+  runApp(app);
+}

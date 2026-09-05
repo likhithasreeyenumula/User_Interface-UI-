@@ -1,0 +1,170 @@
+import 'package:flutter/material.dart'; 
+void main() { 
+  runApp(MyApp()); 
+} 
+class MyApp extends StatelessWidget { 
+   @override 
+  Widget build(BuildContext context) { 
+     return MaterialApp( 
+      debugShowCheckedModeBanner: false, 
+       home: CounterScreen(), 
+    ); 
+  } 
+} 
+// Stateful Widget 
+class CounterScreen extends StatefulWidget { 
+   @override 
+  State<CounterScreen> createState() => _CounterScreenState(); 
+} 
+class _CounterScreenState extends State<CounterScreen> { 
+   // State Variable 
+  int count = 0; 
+   // Function to increment counter 
+  void incrementCounter() { 
+     setState(() { 
+       count++; 
+    }); 
+  } 
+   // Function to decrement counter 
+  void decrementCounter() { 
+ 
+    setState(() { 
+       count--; 
+    }); 
+  } 
+   @override 
+  Widget build(BuildContext context) { 
+     return Scaffold( 
+       appBar: AppBar( 
+        title: Text("setState Example"), 
+      ), 
+       body: Center( 
+         child: Column( 
+          mainAxisAlignment: MainAxisAlignment.center, 
+           children: [ 
+             Text( 
+              "Counter Value", 
+              style: TextStyle( 
+                fontSize: 28, 
+              ), 
+            ), 
+             SizedBox(height: 20), 
+             Text( 
+              "$count", 
+              style: TextStyle( 
+                fontSize: 40, 
+                fontWeight: FontWeight.bold, 
+              ), 
+            ), 
+             SizedBox(height: 30), 
+             Row( 
+              mainAxisAlignment: MainAxisAlignment.center, 
+ 
+              children: [ 
+                 ElevatedButton( 
+                   onPressed: decrementCounter, 
+                   child: Text("Decrease"), 
+                ), 
+                  SizedBox(width: 20), 
+                 ElevatedButton( 
+                   onPressed: incrementCounter, 
+                   child: Text("Increase"), 
+                ), 
+              ], 
+            ), 
+          ], 
+        ), 
+      ), 
+    ); 
+  } 
+}
+
+2. State Management Using Provider
+import 'package:flutter/material.dart'; 
+import 'package:provider/provider.dart'; 
+// CounterProvider class defined to fix the missing file/type error
+class CounterProvider extends ChangeNotifier {
+  int _count = 0;
+  int get count => _count;
+  void increment() {
+    _count++;
+    notifyListeners();
+  }
+  void decrement() {
+    _count--;
+    notifyListeners();
+  }
+} 
+void main() {  
+  runApp( 
+    ChangeNotifierProvider( 
+      create: (context) => CounterProvider(), 
+      child: MyApp(), 
+    ), 
+  ); 
+} 
+class MyApp extends StatelessWidget { 
+  @override 
+  Widget build(BuildContext context) { 
+    return MaterialApp( 
+      debugShowCheckedModeBanner: false, 
+      home: HomeScreen(), 
+    ); 
+  } 
+} 
+ 
+class HomeScreen extends StatelessWidget { 
+  @override 
+  Widget build(BuildContext context) { 
+ 
+    // Access Provider 
+    final counterProvider = 
+        Provider.of<CounterProvider>(context); 
+ 
+    return Scaffold( 
+      appBar: AppBar( 
+        title: Text("Provider Example"), 
+      ), 
+      body: Center( 
+        child: Column( 
+          mainAxisAlignment: MainAxisAlignment.center, 
+          children: [ 
+            Text( 
+              "Counter Value", 
+              style: TextStyle( 
+                fontSize: 28, 
+              ), 
+            ), 
+            SizedBox(height: 20), 
+            Text( 
+              "${counterProvider.count}", 
+              style: TextStyle( 
+                fontSize: 40, 
+                fontWeight: FontWeight.bold, 
+              ), 
+            ), 
+            SizedBox(height: 30), 
+            Row( 
+              mainAxisAlignment: MainAxisAlignment.center, 
+              children: [ 
+                ElevatedButton( 
+                  onPressed: () { 
+                    counterProvider.decrement(); 
+                  }, 
+                  child: Text("Decrease"), 
+                ), 
+                SizedBox(width: 20),
+                ElevatedButton( 
+                  onPressed: () { 
+                    counterProvider.increment(); 
+                  }, 
+                   child: Text("Increase"), 
+                ), 
+              ], 
+            ), 
+          ], 
+        ), 
+      ), 
+    ); 
+  } 
+}
