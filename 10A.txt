@@ -1,0 +1,103 @@
+import 'package:flutter/material.dart'; 
+import 'package:provider/provider.dart'; 
+// 1. DATA_MODEL: Core Logic for Telemetry Processing 
+class CoreTelemetryProcessingEngine { 
+double computePerformanceMetricIndex(int processingCores, double loadFactorRatio) { 
+if (processingCores <= 0 || loadFactorRatio < 0) return 0.0; 
+return (processingCores * loadFactorRatio) / 2.5; 
+} 
+List<String> purgeCorruptedDataStream(List<String> rawStreamInputArray) { 
+return rawStreamInputArray 
+.where((element) => element.isNotEmpty && element.trim().toLowerCase() != 'null') 
+.map((element) => element.trim()) 
+.toList(); 
+} 
+} 
+// 2. UI State Provider 
+class TelemetryState extends ChangeNotifier { 
+final CoreTelemetryProcessingEngine _engine = CoreTelemetryProcessingEngine(); 
+int _cores = 8; 
+double _loadFactor = 75.0; 
+List<String> _rawLogs = ['  Core Alpha  ', 'NULL', 'Core Beta', '', '   Core Gamma ']; 
+List<String> _cleanedLogs = []; 
+TelemetryState() { 
+_refreshCleanedLogs(); 
+} 
+int get cores => _cores; 
+double get loadFactor => _loadFactor; 
+List<String> get cleanedLogs => _cleanedLogs; 
+void updateCores(int value) { 
+_cores = value; 
+notifyListeners(); 
+} 
+void updateLoadFactor(double value) { 
+_loadFactor = value; 
+notifyListeners(); 
+} 
+void _refreshCleanedLogs() { 
+_cleanedLogs = _engine.purgeCorruptedDataStream(_rawLogs); 
+} 
+double get performanceIndex => _engine.computePerformanceMetricIndex(_cores, 
+_loadFactor); 
+} 
+void main() { 
+runApp( 
+ChangeNotifierProvider( 
+create: (_) => TelemetryState(), 
+builder: (context, child) => const MaterialApp(home: TelemetryDashboard()), 
+), 
+); 
+} 
+// 3. UI Implementation 
+class TelemetryDashboard extends StatelessWidget { 
+const TelemetryDashboard({super.key}); 
+@override 
+Widget build(BuildContext context) { 
+return Scaffold( 
+      appBar: AppBar(title: const Text('Telemetry Processor')), 
+      body: Consumer<TelemetryState>( 
+        builder: (context, state, _) { 
+          return ListView( 
+            padding: const EdgeInsets.all(16), 
+            children: [ 
+              Card( 
+                child: Padding( 
+                  padding: const EdgeInsets.all(16), 
+                  child: Column( 
+                    children: [ 
+                      Text('Performance Metric Index', style: 
+Theme.of(context).textTheme.headlineSmall), 
+                      Text('${state.performanceIndex.toStringAsFixed(2)}', style: const 
+TextStyle(fontSize: 48, fontWeight: FontWeight.bold)), 
+                      Slider( 
+                        value: state.cores.toDouble(), 
+                        min: 0, 
+                        max: 64, 
+                        divisions: 64, 
+                        label: '${state.cores} Cores', 
+                        onChanged: (v) => state.updateCores(v.toInt()), 
+                      ), 
+                      Slider( 
+                        value: state.loadFactor, 
+                        min: 0, 
+                        max: 100, 
+                        label: '${state.loadFactor.toInt()}% Load', 
+                        onChanged: state.updateLoadFactor, 
+                      ), 
+                    ], 
+                  ), 
+                ), 
+              ), 
+              const SizedBox(height: 20), 
+              Text('Cleaned Data Streams', style: Theme.of(context).textTheme.titleLarge), 
+              ...state.cleanedLogs.map((log) => ListTile( 
+                leading: const Icon(Icons.check_circle_outline), 
+                title: Text(log), 
+              )), 
+            ], 
+          ); 
+        }, 
+      ), 
+    ); 
+  } 
+}
